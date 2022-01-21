@@ -12,9 +12,16 @@ public class UserClient extends RestAssuredClient {
         return given()
                 .spec(getBaseSpec())
                 .body(user)
-                .log()
-                .all()
                 .when()
                 .post(USER_PATH + "/register");
+    }
+
+    @Step("Login user")
+    public Response loginUser(UserCredentials credentials) {
+        return given()
+                .spec(getBaseSpec())
+                .body(credentials)
+                .when()
+                .post(USER_PATH + "/login");
     }
 }
