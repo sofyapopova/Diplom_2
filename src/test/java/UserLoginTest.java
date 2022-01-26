@@ -1,6 +1,5 @@
 import com.github.javafaker.Faker;
 import io.qameta.allure.junit4.DisplayName;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -23,7 +22,7 @@ public class UserLoginTest {
     }
 
     @Test
-    public void checkCourierCanLogin() {
+    public void checkUserCanLogin() {
 
         String actualResponseMessage = userClient.loginUser(UserCredentials.from(user))
                 .then()
@@ -38,7 +37,7 @@ public class UserLoginTest {
     @Test
     public void checkErrorWhenUserLoginWithIncorrectPassword() {
 
-        String incorrectPassword = RandomStringUtils.randomAlphabetic(10);
+        String incorrectPassword = new Faker().internet().password();
         String expectedResponseMessage = "email or password are incorrect";
 
         String actualResponseMessage = userClient.loginUser(new UserCredentials(user.getEmail(), incorrectPassword, user.getName()))
@@ -70,7 +69,7 @@ public class UserLoginTest {
     @Test
     public void checkErrorWhenUserLoginWithIncorrectName() {
 
-        String incorrectName = RandomStringUtils.randomAlphabetic(10);
+        String incorrectName = new Faker().name().firstName();
         String expectedResponseMessage = "email or password are incorrect";
 
         String actualResponseMessage = userClient.loginUser(new UserCredentials(user.getEmail(), user.getPassword(), incorrectName))

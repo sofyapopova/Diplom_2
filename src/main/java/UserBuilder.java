@@ -1,5 +1,4 @@
 import com.github.javafaker.Faker;
-import org.apache.commons.lang3.RandomStringUtils;
 
 public class UserBuilder {
 
@@ -11,8 +10,12 @@ public class UserBuilder {
         return new User(email, password, name);
     }
 
-    private String getRandomString() {
-        return RandomStringUtils.randomAlphabetic(10);
+    private String getRandomName() {
+        return new Faker().name().firstName();
+    }
+
+    private String getRandomPassword() {
+        return new Faker().internet().password();
     }
 
     private String getRandomEmail() {
@@ -21,8 +24,8 @@ public class UserBuilder {
 
     public UserBuilder random() {
         this.email = this.getRandomEmail();
-        this.password = this.getRandomString();
-        this.name = this.getRandomString();
+        this.password = this.getRandomPassword();
+        this.name = this.getRandomName();
         return this;
     }
 
@@ -33,11 +36,11 @@ public class UserBuilder {
         }
 
         if (setPassword) {
-            this.password = this.getRandomString();
+            this.password = this.getRandomPassword();
         }
 
         if (setName) {
-            this.name = this.getRandomString();
+            this.name = this.getRandomName();
         }
 
         return this;
