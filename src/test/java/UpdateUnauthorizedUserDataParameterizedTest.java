@@ -8,7 +8,7 @@ import org.junit.runners.Parameterized;
 
 import static org.junit.Assert.assertEquals;
 
-@DisplayName("Check the unauthorized user cannot change his data")
+@DisplayName("Check unauthorized user cannot change his data")
 @RunWith(Parameterized.class)
 
 public class UpdateUnauthorizedUserDataParameterizedTest {

@@ -1,8 +1,10 @@
+import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 
+@DisplayName("Check only authorized users can get orders info")
 public class GetUsersOrdersTest {
 
     private OrderClient orderClient;
