@@ -7,16 +7,14 @@ public class OrderCreationTest {
 
     private IngredientsClient ingredientsClient;
     private OrderClient orderClient;
-    private UserClient userClient;
-    private User user;
     private String accessToken;
 
     @Before
     public void setUp() {
         ingredientsClient = new IngredientsClient();
         orderClient = new OrderClient();
-        userClient = new UserClient();
-        user = new UserBuilder().random().buildUser();
+        UserClient userClient = new UserClient();
+        User user = new UserBuilder().random().buildUser();
         accessToken = userClient.registerUser(user)
                 .then()
                 .extract()

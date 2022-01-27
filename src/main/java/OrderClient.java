@@ -31,7 +31,7 @@ public class OrderClient extends RestAssuredClient {
     @Step("Get orders of authorized user")
     public Response getUsersOrders(String accessToken) {
         return given()
-                .header("Authorization", accessToken)
+                .spec(getAuthorizedSpec(accessToken))
                 .when()
                 .get(ORDER_PATH);
     }
@@ -39,6 +39,7 @@ public class OrderClient extends RestAssuredClient {
     @Step("Get orders of unauthorized user")
     public Response getUsersOrders() {
         return given()
+                .spec(getBaseSpec())
                 .when()
                 .get(ORDER_PATH);
     }
