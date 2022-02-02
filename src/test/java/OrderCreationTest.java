@@ -2,7 +2,7 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.*;
+import static org.junit.Assert.*;
 
 @DisplayName("Check order creation cases")
 public class OrderCreationTest {
@@ -26,21 +26,27 @@ public class OrderCreationTest {
     @Test
     public void checkUnauthorizedUserCannotCreateOrder() {
 
-        orderClient.createOrder(ingredientsClient.createBurgerBody())
+        boolean isOrderCreated = orderClient.createOrder(ingredientsClient.createBurgerBody())
                 .then()
                 .assertThat()
                 .statusCode(401)
-                .body("success", is(false));
+                .extract()
+                .path("success");
+
+        assertFalse("Unauthorized user can create order", isOrderCreated);
     }
 
     @Test
     public void checkAuthorizedUserCanCreateOrder() {
 
-        orderClient.createOrder(ingredientsClient.createBurgerBody(), accessToken)
+         Integer orderNumber = orderClient.createOrder(ingredientsClient.createBurgerBody(), accessToken)
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("order.number", notNullValue());
+                .extract()
+                .path("order.number");
+
+        assertNotNull("Authorized user can't create order", orderNumber);
     }
 
     @Test
@@ -48,11 +54,14 @@ public class OrderCreationTest {
 
         String expectedResponseMessage = "Ingredient ids must be provided";
 
-        orderClient.createOrder(ingredientsClient.createEmptyBurgerBody(), accessToken)
+        String actualResponseMessage = orderClient.createOrder(ingredientsClient.createEmptyBurgerBody(), accessToken)
                 .then()
                 .assertThat()
                 .statusCode(400)
-                .body("message", equalTo(expectedResponseMessage));
+                .extract()
+                .path("message");
+
+        assertEquals("Order can be created without ingredients", expectedResponseMessage, actualResponseMessage);
     }
 
     @Test
@@ -60,10 +69,13 @@ public class OrderCreationTest {
 
         String expectedResponseMessage = "One or more ids provided are incorrect";
 
-        orderClient.createOrder(ingredientsClient.createIncorrectBurgerBody(), accessToken)
+        String actualResponseMessage = orderClient.createOrder(ingredientsClient.createIncorrectBurgerBody(), accessToken)
                 .then()
                 .assertThat()
                 .statusCode(400)
-                .body("message", equalTo(expectedResponseMessage));
+                .extract()
+                .path("message");
+
+        assertEquals("Order can be created with incorrect ingredients id", expectedResponseMessage, actualResponseMessage);
     }
 }

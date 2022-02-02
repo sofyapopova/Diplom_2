@@ -2,7 +2,8 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.equalTo;
+import static io.restassured.path.json.JsonPath.from;
+import static org.junit.Assert.assertEquals;
 
 @DisplayName("Check only authorized users can get orders info")
 public class GetUsersOrdersTest {
@@ -32,11 +33,16 @@ public class GetUsersOrdersTest {
     @Test
     public void checkAuthorizedUserCanGetHisOrders() {
 
-        orderClient.getUsersOrders(accessToken)
+        int actualOrderNumber = from(orderClient.getUsersOrders(accessToken)
                 .then()
                 .assertThat()
                 .statusCode(200)
-                .body("orders.findAll {it}.number[0]", equalTo(orderNumber));
+                .extract()
+                .asString())
+                .get("orders.findAll {it}.number[0]");
+
+        assertEquals("Order number is incorrect", orderNumber, actualOrderNumber);
+
     }
 
     @Test
@@ -44,11 +50,12 @@ public class GetUsersOrdersTest {
 
         String expectedResponseMessage = "You should be authorised";
 
-        orderClient.getUsersOrders()
+        String actualResponseMessage = orderClient.getUsersOrders()
                 .then()
                 .assertThat()
                 .statusCode(401)
-                .body("message", equalTo(expectedResponseMessage));
+                .extract()
+                .path("message");
+        assertEquals("Response message is incorrect", expectedResponseMessage, actualResponseMessage);
     }
-
 }
