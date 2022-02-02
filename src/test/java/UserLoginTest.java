@@ -3,10 +3,8 @@ import io.qameta.allure.junit4.DisplayName;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.notNullValue;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 @DisplayName("Check user can login")
 public class UserLoginTest {
@@ -31,7 +29,7 @@ public class UserLoginTest {
                 .extract()
                 .path("accessToken");
 
-        assertThat("Returned empty access token in response", actualResponseMessage, is(notNullValue()));
+        assertNotNull("Returns empty access token in response", actualResponseMessage);
     }
 
     @Test
